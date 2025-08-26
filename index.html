@@ -1,0 +1,188 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MatMic Solutions - Expert material research and advanced analytical techniques in Australia">
+  <meta name="keywords" content="material research, advanced analytical techniques, MatMic Solutions, nanomaterials, Australia">
+  <title>MatMic Solutions | Australia</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      color: #333;
+    }
+    header {
+      background-color: #2E7D32; /* Green for science and innovation */
+      color: white;
+      text-align: center;
+      padding: 1.5rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    nav {
+      background-color: #E0F2F1;
+      padding: 1rem;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      margin: 0;
+    }
+    nav ul li {
+      margin: 0 1rem;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: #2E7D32;
+      font-weight: bold;
+    }
+    section {
+      padding: 1.5rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    section h2 {
+      color: #2E7D32;
+      font-size: 1.5rem;
+    }
+    .contact-form {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .contact-form label {
+      display: block;
+      margin: 0.5rem 0;
+    }
+    .contact-form input, .contact-form textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .contact-form button {
+      background-color: #2E7D32;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    footer {
+      background-color: #2E7D32;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.5rem;
+      }
+      nav ul {
+        flex-direction: column;
+        text-align: center;
+      }
+      nav ul li {
+        margin: 0.5rem 0;
+      }
+      section {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>MatMic Solutions</h1>
+    <p>Innovative Material Research and Analytical Techniques in Australia</p>
+  </header>
+  <nav>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+  <section id="home">
+    <h2>Welcome to MatMic Solutions</h2>
+    <p>We specialize in material research and advanced analytical techniques, delivering innovative solutions for industries across Australia. Partner with us for precision and excellence.</p>
+  </section>
+  <section id="about">
+    <h2>About Us</h2>
+    <p>MatMic Solutions, based in Australia, is led by Vishal Mutreja, Ph.D. in Chemistry. Our team leverages advanced scientific expertise to provide tailored material solutions and characterization services to meet your industry needs.</p>
+  </section>
+  <section id="services">
+    <h2>Our Services</h2>
+    <ul>
+      <li>Material Research and Development</li>
+      <li>Advanced Analytical Techniques</li>
+      <li>Specialized Preparation of Nanomaterials (e.g., Graphene, Carbon Dots, Carbon Nanotubes, Porous Materials)</li>
+      <li>Tailored Solutions for Your Industry</li>
+    </ul>
+  </section>
+  <section id="contact">
+    <h2>Contact Us</h2>
+    <p>Get in touch with Vishal Mutreja, Ph.D. Chemistry, at <a href="mailto:info@matmicsolutions.com.au">info@matmicsolutions.com.au</a> or use the form below.</p>
+    <div class="contact-form">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+      <label for="message">Message:</label>
+      <textarea id="message" name="message" rows="4" required></textarea>
+      <button type="submit">Send</button>
+    </div>
+  </section>
+  <footer>
+    <p>&copy; 2025 MatMic Solutions. | <a href="http://www.matmicsolutions.com.au" style="color: white;">matmicsolutions.com.au</a></p>
+  </footer>
+</body>
+</html>
